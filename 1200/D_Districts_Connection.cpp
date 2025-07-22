@@ -19,33 +19,17 @@ typedef map<int, int> mi;
 #define pb push_back
 #define br cout << "\n"
 //****************************************************************
-void printValidAns(int n, unordered_map<int, vector<int>> &m)
+
+void printCurrent(int par, vector<int> &childs, bool first)
 {
-    cout << "Yes";
-    br;
-    vector<int> ans(n, 0);
-    int i = 0;
-    vector<pair<int, vector<int>>> newM;
-    for (auto freqVec : m)
-    {
-        newM.push_back({-(freqVec.second.size()), freqVec.second});
-    }
-    sort(newM.begin(), newM.end());
+    int n = childs.size();
 
-    for (auto freqVec : newM)
+    for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < freqVec.second.size(); j++)
-        {
-            ans[i] = freqVec.second[j];
-            i = (i + 2);
-            if (i >= n)
-                i = 1;
-        }
-    }
+        if (first && i == 0)
+            continue;
 
-    for (int i = 0; i < n - 1; i++)
-    {
-        cout << ans[i] << " " << ans[i + 1];
+        cout << par << " " << childs[i];
         br;
     }
 }
@@ -53,23 +37,40 @@ void solve()
 {
     int n;
     cin >> n;
-    int maxFreq = 0;
+    vector<int> gangs(n + 1);
     unordered_map<int, vector<int>> m;
-
-    for (int i = 0; i < n; i++)
+    for (int i = 1; i <= n; i++)
     {
-        int num;
-        cin >> num;
-        m[num].push_back(i + 1);
-        maxFreq = max(maxFreq, static_cast<int>(m[num].size()));
+        cin >> gangs[i];
+        m[gangs[i]].push_back(i);
     }
-    if (maxFreq > (n + 1) / 2)
+    if (m.size() == 1 && gangs.size() > 1)
     {
-        cout << "No";
+        cout << "NO";
         br;
+        return;
     }
-    else
-        printValidAns(n, m);
+
+    cout << "YES";
+    br;
+
+    int par = -1;
+    int firstNum = 0;
+
+    for (auto it : m)
+    {
+        if (par == -1)
+        {
+            par = it.second[0];
+            firstNum = it.first;
+        }
+        else
+        {
+            printCurrent(par, it.second, false);
+            par  = it.second[0];
+        }
+    }
+    printCurrent(par, m[firstNum], true);
 }
 
 int main()
