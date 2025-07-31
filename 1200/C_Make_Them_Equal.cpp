@@ -27,40 +27,57 @@ void solve()
     cin >> c;
     string s;
     cin >> s;
-    int even = 0;
-    int odd = 0;
-    for (int i = 1; i <= n; i++)
+
+    bool ans0 = true;
+    for (int i = 0; i < n; i++)
     {
-        if (i % 2 && s[i - 1] != c)
-            odd++;
-        else if (i % 2 == 0 && s[i - 1] != c)
-            even++;
+        if (s[i] != c)
+        {
+            ans0 = false;
+            break;
+        }
     }
 
-    if (even != 0 && odd != 0)
+    if (ans0)
     {
-        cout << 2;
+        cout << 0;
         br;
-        cout << 2 << " " << 3;
-        br;
+        return;
     }
-    else if (even != 0 && odd == 0)
+
+    int ans1 = -1;
+
+    for (int i = 2; i <= n; i++)
+    {
+        bool pos = true;
+        for (int j = i; j <= n; j = j + i)
+        {
+            if (s[j - 1] != c)
+            {
+                pos = false;
+                break;
+            }
+        }
+        if (pos)
+        {
+            ans1 = i;
+            break;
+        }
+    }
+
+    if (ans1 != -1)
     {
         cout << 1;
         br;
-        cout << 3;
+        cout << ans1;
         br;
-    }
-    else if (even == 0 && odd != 0)
-    {
-        cout << 1;
-        br;
-        cout << 2;
-        br;
+        return;
     }
     else
     {
-        cout << 0;
+        cout << 2;
+        br;
+        cout << n << " " << n - 1;
         br;
     }
 }
